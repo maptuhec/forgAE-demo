@@ -1,0 +1,27 @@
+contract Billboard = 
+
+  record state = {
+    billboardPrice: int,
+    billboardOwner: address,
+    billboardSlogan: string}
+
+  public stateful function init(_billboardPrice: int) =
+    { billboardPrice = _billboardPrice,
+      billboardOwner = Call.caller,
+      billboardSlogan = "New Billboard"}
+
+  public function getBillboardPrice() : int = state.billboardPrice
+  public function getBillboardOwner() : address = state.billboardOwner
+  public function getBillboardSlogan() : string = state.billboardSlogan
+  
+  public function buyBillboard(_billboardSlogan:string) =
+    require(Call.value >= state.billboardPrice, "The price must higher than the current")
+    require(Call.caller != state.billboardOwner, "The owner should be different from the current")
+    put(state{
+      billboardPrice = Call.value,
+      billboardOwner = Call.caller,
+      billboardSlogan = _billboardSlogan})
+
+  private function require(b : bool, err : string) =
+  		if(!b)
+		    abort(err)
