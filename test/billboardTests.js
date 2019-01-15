@@ -23,24 +23,6 @@ const config = {
   ttl: 55
 }
 
-const executeSmartContractFunction = async function (deployedContract, functionName, args, ttl = 345345, gas = 2000000) {
-  let configuration = {
-    options: {
-      ttl: ttl,
-      gas: gas
-    },
-    abi: "sophia",
-  };
-
-  if (args) {
-    configuration.args = args
-  }
-
-  let result = await deployedContract.call(functionName, configuration);
-
-  return result
-}
-
 describe('Billborad Tests', () => {
 
   let owner;
@@ -127,7 +109,7 @@ describe('Billborad Tests', () => {
 
   it("should buy billboard", async () => {
 
-    const buyBillboardPromise = notOwner.contractCall(compiledContractBefore.bytecode, 'sophia', deployedContractBefore.address, "buyBillboard", {
+    const buyBillboardPromise = await notOwner.contractCall(compiledContractBefore.bytecode, 'sophia', deployedContractBefore.address, "buyBillboard", {
       args: `("${_billboardSlogan}")`,
       options: {
         ttl: config.ttl,
@@ -146,7 +128,7 @@ describe('Billborad Tests', () => {
     });
     let getPricePromiseResult = await getPricePromise;
     let getPriceResult = await getPricePromiseResult.decode("int")
-    assert.equal(getPriceResult.value, _billboardPrice, "The price of the billboard is wrong")
+    assert.equal(getPriceResult.value, _newPrice, "The price of the billboard is wrong")
 
   })
 
@@ -156,7 +138,7 @@ describe('Billborad Tests', () => {
       options: {
         ttl: config.ttl,
         gas: config.gas,
-        amount: 0
+        amount: _lowerPrice
       },
       abi: "sophia",
     })
