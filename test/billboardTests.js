@@ -86,8 +86,6 @@ describe('Billborad Tests', () => {
       }
     });
 
-
-
     assert.isFulfilled(deployPromise, 'Could not deploy the Billboard Smart Contract KYP'); // Check it is deployed
 
   })
