@@ -22,7 +22,6 @@ const deploy = async (network, privateKey) => {
 	let deployer = new Deployer(network, privateKey)
 
 	let result = await deployer.deploy("./contracts/Billboard.aes", gasLimit, initState = "100")
-	console.log(result);
 };
 
 
